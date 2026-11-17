@@ -8,7 +8,7 @@ Date: 17 novembre 2026
 #include <LibRobus.h>
 void setup() 
 {
-  // Initialisation du projet
+  // Initialisation du projet fuck you
 }
 void loop() 
 {
