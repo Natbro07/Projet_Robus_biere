@@ -93,9 +93,9 @@ void interruptionTimer3()
   compteurCapteur++;
 }
 
-ISR(TIMER2_COMPB_vect){
+/*ISR(TIMER2_COMPB_vect){
   if (++compteurTimer3 >= 10){
     compteurTimer3 = 0;
     interruptionTimer3();
   }
-}
+}*/
