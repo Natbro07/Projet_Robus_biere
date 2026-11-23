@@ -1,22 +1,33 @@
+/*
+* @fichier WirelessCommand.cpp
+* @auteur Mathieu Goulet
+* @résumé Implementation de la fonction sans-fil de l'esp32 et le web ainsi que la gestion des commandes de bières. 
+* @détails nécessite l'ajuste et l'utilisateur du suiveur de ligne 
+* @détails Exemple utilisation 
+        wirelessCommand.update(); // Appel de la fonction update dans la boucle principale du projet. et la fonction update va lire les commandes sans-fil et les gérer.
+* @détails Pour le setup
+        Serial.begin(9600);     
+*/
+
 #include "WirelessCommand.h"
 
-
-void gererCommandeInconnue(uint8_t command) {
-  if (command == '\r' || command == '\n') return;
-
-  Serial.print(F("Commande inconnue: decimal="));
-  Serial.print(command);
-  Serial.print(F(" hex=0x"));
-  if (command < 16) Serial.print('0');
-  Serial.println(command, HEX);
+/*
+* @résumé Code a venir pour l'ouverture de la canette.
+* @param la fonction à appeler pour l'ouverture de la canette ou le code pour l'ouverture de la canette.
+* @details nécessite le code pour l'ouvre canette de Mathys. 
+*/
+void ouvrirCanette() {
+  Serial.println(F("OUVERTURE DE LA CANETTE"));
+  // Ajouter les actions pour ouvrir la canette. avec l'ouvre canette.
 }
-/// @brief Gère les commandes inconnues
-/// @param command La commande inconnue
-///////////////////////////////////////////
 // A noté que les nom des breuvage seront changé pour le projet final.
+/*
+* @résumé Fonction pour gérer les commandes de bières et l'ouverture de la canette.
+* @param command: la commande reçu par le web vers l'esp32 qui transmet la commande au arudino.
+*/
 void gererCommande(uint8_t command) {
   switch (command) { // Switch case des commandes pour gérer les différentes commandes de bières
-    case DEMANDE_BIERE_ROUGE:
+    case DEMANDE_BIERE_ROUGE: 
     case '1':
     case 'r':
     case 'R':
@@ -39,9 +50,35 @@ void gererCommande(uint8_t command) {
       Serial.println(F("BIERE JAUNE"));
       // Ajouter ici le trajet de la biere jaune.
       return;
+    case DEMANDE_OUVRIR:
+    case '4':
+    case 'o':
+    case 'O':
+      Serial.println(F("OUVERTURE DE LA CANETTE"));
+      ouvrirCanette();
+      return;
+
+    case DEMANDE_BIERE_ROUGE_OUVERTURE:
+      Serial.println(F("BIERE ROUGE + OUVERTURE"));
+      // Ajouter ici le trajet de la biere rouge.
+      ouvrirCanette();
+      return;
+
+    case DEMANDE_BIERE_BLEUE_OUVERTURE:
+      Serial.println(F("BIERE BLEUE + OUVERTURE"));
+      // Ajouter ici le trajet de la biere bleue.
+      ouvrirCanette();
+      return;
+
+    case DEMANDE_BIERE_JAUNE_OUVERTURE:
+      Serial.println(F("BIERE JAUNE + OUVERTURE"));
+      // Ajouter ici le trajet de la biere jaune.
+      ouvrirCanette();
+      return;
 
     default:
-      gererCommandeInconnue(command);
+      Serial.println(F("COMMANDE INVALIDE"));
+      return;
   }
 }
 
