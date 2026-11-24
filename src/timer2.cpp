@@ -7,6 +7,7 @@
 #include "timer2.h"
 
 int compteurTimer2 = 0;
+extern volatile int compteurCapteur; 
 
 //créer vos variables ici
 
@@ -49,6 +50,7 @@ void initTimer2()
 void interruptionTimer2()
 {
     //incrémenter vos compteurs ici pour les timers
+  compteurCapteur++;
 }
 
 /*

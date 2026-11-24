@@ -5,11 +5,10 @@
 */
 #include <stdio.h>
 #include <Arduino.h>
+#include "timer2.h"
 
 // Define model and input pin:
 #define sensor A0 
 
 //fonction 
 bool distanceRack(float distanceVoulue);
-void initTimer3();
-void interruptionTimer3();
