@@ -3,24 +3,24 @@ import Layout from '../layouts/Layout.astro';
 
 const cardList = [
 	{
-		title: 'Cocktail jaune',
-		content: 'This is a sample card.',
+		title: 'Cock-cola',
+		content: 'Boisson gazeuse, sucrée et rafraîchissante.',
 		buttonText: 'Commander',
 		button2Text: 'Commander & ouvrir',
 		image: '/drink-1.png',
 		imageAlt: 'Cocktail jaune avec cerise et tranche d\'orange',
 	},
 	{
-		title: "Cocktail a l'orange",
-		content: 'This is another sample card.',
+		title: "Minute Maid Limonade",
+		content: 'Limonade sucré, parfait pour se rafraîchir.',
 		buttonText: 'Commander',
 		button2Text: 'Commander & ouvrir',
 		image: '/drink-2.png',
 		imageAlt: 'Cocktail jaune servi dans un verre bas',
 	},
 	{
-		title: 'Thé glacé',
-		content: 'This is a third sample card.',
+		title: 'Peace Tea Fremboise',
+		content: 'Thé glacé à la framboise, parfait pour les amateurs de saveurs fruitées.',
 		buttonText: 'Commander',
 		button2Text: 'Commander & ouvrir',
 		image: '/drink-3.png',
@@ -67,8 +67,8 @@ const cardList = [
 	}
 
 	.card {
-		background: #2e2e3a;
-		border: 1px solid rgba(255, 202, 58, 0.24);
+		background: #1c1c3052;
+		border: 1px solid rgba(63, 54, 31, 0.24);
 		border-radius: 14px;
 		box-shadow: 0 16px 34px rgba(0, 0, 0, 0.2);
 		display: flex;
@@ -85,7 +85,7 @@ const cardList = [
 	}
 
 	.card-image {
-		background: #9c6615;
+		background: linear-gradient(180deg, rgba(255, 202, 58, 0.24) 0%, rgba(255, 202, 58, 0.12) 100%);
 		border-radius: 12px;
 		display: block;
 		height: clamp(280px, 30vw, 360px);
@@ -221,15 +221,19 @@ const cardList = [
 
 		.card {
 			min-height: 0;
-			padding: 20px;
+			padding: 12px;
 		}
 
 		.card-content {
+			align-items: center;
+			display: grid;
+			gap: 12px;
+			grid-template-columns: minmax(80px, 30%) minmax(0, 1fr);
 		}
 
 		.card-image {
-			height: clamp(260px, 85vw, 420px);
-			margin-bottom: 16px;
+			height: 104px;
+			margin-bottom: 0;
 		}
 
 		.card-copy {
@@ -237,57 +241,58 @@ const cardList = [
 		}
 
 		.card h2 {
-			font-size: 1rem;
-			margin-bottom: 8px;
+			font-size: 0.95rem;
+			line-height: 1.2;
+			margin-bottom: 6px;
 		}
 
 		.card p {
-			font-size: 0.85rem;
+			font-size: 0.78rem;
+			line-height: 1.35;
 			margin: 0;
 		}
 
 		.card-actions {
-			padding-top: 16px;
+			gap: 8px;
+			padding-top: 10px;
 		}
 
 		.card-actions .button {
-			padding: 9px 12px;
+			font-size: 0.72rem;
+			line-height: 1.15;
+			padding: 7px 8px;
 		}
 	}
 
 	@media (max-width: 600px) and (orientation: landscape) {
 		.cards {
-			grid-template-columns: repeat(3, minmax(0, 1fr));
+			grid-template-columns: repeat(1, minmax(0, 1fr));
 		}
 
 		.card {
-			padding: 14px;
-		}
-
-		.card-content {
+			padding: 10px;
 		}
 
 		.card-image {
-			height: 220px;
-			margin-bottom: 12px;
+			height: 80px;
 		}
 
 		.card h2 {
-			font-size: 0.88rem;
+			font-size: 0.85rem;
 		}
 
 		.card p {
-			font-size: 0.75rem;
+			font-size: 0.7rem;
 			line-height: 1.35;
 		}
 
 		.card-actions {
-			grid-template-columns: 1fr;
+			gap: 6px;
 		}
 
 		.card-actions .button {
-			font-size: 0.72rem;
-			padding: 7px 9px;
+			font-size: 0.68rem;
+			padding: 6px;
 		}
 	}
 </style>

@@ -6,11 +6,19 @@ Date: 17 novembre 2026
 */
 
 #include <LibRobus.h>
+#include "WirelessCommand.h"
+#include "Mouvement.h"
+
+WirelessCommand wirelessCommand;
+float distance = 0;
 void setup() 
 {
-  // Initialisation du projet pipi
+  BoardInit();
+  BluetoothInit(); // Initialise UART2 pour recevoir les commandes de l'ESP32.
 }
 void loop() 
 {
-  // Boucle principale du projet
+  arret();
+  wirelessCommand.update();
+  
 }
