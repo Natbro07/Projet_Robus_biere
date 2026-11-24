@@ -10,7 +10,7 @@ Date: 17 novembre 2026
 
 void setup() 
 {
-  // Initialisation du projet pipi
+  // Initialisation du projet 
 }
 void loop() 
 {
