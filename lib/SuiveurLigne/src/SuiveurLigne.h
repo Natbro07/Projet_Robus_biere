@@ -20,12 +20,12 @@ static const float VIRAGE_BASE   = 0.40; // Virage initial plus agressif (était
 static const float SCALE         = 0.04; // Montée en puissance plus rapide (était 0.02)
 static const float VIRAGE_MAX    = 0.90; // Autorise une forte correction (était 0.50)
 
-bool voitLigne(uint8_t pin);
+bool voitLigne(uint8_t pin); // RETOURNE SI IL Y A UNE LIGNE SOUS LA PIN
 
-void avance(float left, float right);
+void avance(float left, float right); // FAIS AVANCER LE ROBOT SANS CORRECTION, LES INPUTS SONT LES VITESSES DES ROUES
 
-bool suiveurLigne(float vitesse);
+bool suiveurLigne(float vitesse); // RETURN TRUE QUAND LA FONCTION EST APPELÉ
 
-void suiveurAfficherCapteurs();
+void suiveurAfficherCapteurs(); // AFFICHE LES VALEURS DES PINS ANALOGUE DES CAPTEURS
 
 #endif

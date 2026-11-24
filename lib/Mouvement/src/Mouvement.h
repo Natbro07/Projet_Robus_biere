@@ -17,14 +17,16 @@ const float kd_avance = 0.0028, ki_avance = 0, kp_avance = 0.04, k_sync = 0.005;
 
 //-------------------------------------------------------//
 
-void arret();
+void arret(); // ARRÊTE TOUT MOUVEMENT
 
-void avance(float left, float right);
+void avance(float left, float right); // FAIS AVANCER LE ROBOT SANS CORRECTION, LES INPUTS SONT LES VITESSES DES ROUES
 
-void tourne(float left, float right);
+void tourne(float left, float right); // FAIS TOURNER LE ROBOT SANS CORRECTION, LES INPUTS SONT LES VITESSES DES ROUES
 
-void tourner_deg(float angle, float vitesse);
+void tourner_deg(float angle, float vitesse); // TOURNE DE x DEGRÉS AVEC PID POUR NOMBRE DE DEGRÉS
 
-void avance_m(float distance, float vitesse);
+void avance_m(float distance, float vitesse); // AVANCE DE x MÈTRES AVEC PID POUR DISTANCE
+
+void avance_droit(float vitesse); // AVANCE AVEC CORRECTION SIMPLE SANS PID
 
 #endif

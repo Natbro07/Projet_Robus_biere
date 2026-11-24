@@ -108,3 +108,9 @@ void avance_m(float distance, float vitesse){
   }
   arret();
 }
+
+void avance_droit(float vitesse){
+    float sync = (0.995 * ENCODER_Read(RIGHT) - ENCODER_Read(LEFT)) * k_sync;
+    sync = constrain(sync, -0.1, 0.1);
+    avance(vitesse + sync, vitesse - sync);
+}
