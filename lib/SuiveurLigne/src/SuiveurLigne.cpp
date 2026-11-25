@@ -9,9 +9,9 @@ bool voitLigne(uint8_t pin)
   return (analogRead(pin) > SEUIL_LIGNE) == LIGNE_VALEUR_HAUTE;
 }
 
-void avance(float left, float right){
-  MOTOR_SetSpeed(RIGHT, right);
-  MOTOR_SetSpeed(LEFT,  left);
+void avance(float v_left, float v_right){
+  MOTOR_SetSpeed(RIGHT, v_right);
+  MOTOR_SetSpeed(LEFT,  v_left);
 };
 
 bool suiveurLigne(float vitesse)
