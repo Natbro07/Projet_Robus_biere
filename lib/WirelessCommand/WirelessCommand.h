@@ -22,4 +22,6 @@ enum cmdEsp : uint8_t {
 // Retourne la prochaine commande reçue, ou AUCUNE_COMMANDE si aucune commande valide n'est disponible.
 cmdEsp lireCommandeSansFil();
 
+void initWirelessCommand();
+
 #endif
