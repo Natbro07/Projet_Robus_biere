@@ -6,7 +6,7 @@ Date: 17 novembre 2026
 */
 
 #include <LibRobus.h>
-#include "capteurIR.h"
+#include "WirelessCommand.h"
 
 void setup() 
 {
@@ -14,7 +14,5 @@ void setup()
 }
 void loop() 
 {
-  arret();
-  wirelessCommand.update();
   
 }

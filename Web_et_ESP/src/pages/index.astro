@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 
 const cardList = [
 	{
-		title: 'Cock-cola',
+		title: 'Coca-Cola',
 		content: 'Boisson gazeuse, sucrée et rafraîchissante.',
 		buttonText: 'Commander',
 		button2Text: 'Commander & ouvrir',
@@ -19,7 +19,7 @@ const cardList = [
 		imageAlt: 'Cocktail jaune servi dans un verre bas',
 	},
 	{
-		title: 'Peace Tea Fremboise',
+		title: 'Peace Tea Framboise',
 		content: 'Thé glacé à la framboise, parfait pour les amateurs de saveurs fruitées.',
 		buttonText: 'Commander',
 		button2Text: 'Commander & ouvrir',
@@ -335,9 +335,13 @@ const cardList = [
 	document.addEventListener('bluetooth-message', (event) => {
 		const code = (event as CustomEvent<{ code: number }>).detail?.code;
 		const boissons: Record<number, string> = {
-			1: 'Bière rouge reçue',
-			2: 'Bière bleue reçue',
-			3: 'Bière jaune reçue',
+			1: 'Commande Coca-Cola reçue',
+			2: 'Commande Minute Maid reçue',
+			3: 'Commande Peace Tea reçue',
+			4: 'Commande d’ouverture reçue',
+			5: 'Commande Coca-Cola avec ouverture reçue',
+			6: 'Commande Minute Maid avec ouverture reçue',
+			7: 'Commande Peace Tea avec ouverture reçue',
 		};
 		if (code && boissons[code]) showToast(boissons[code]);
 	});

@@ -7,22 +7,19 @@
 #define WIRELESS_COMMAND_H
 
 #include <Arduino.h>
-// Définition des commandes prises en charge par le robot pour la gestion des bières et l'ouverture de la canette.
+// Commandes de boissons et d'ouverture de canette reçues de l'ESP32.
 enum cmdEsp : uint8_t {
   AUCUNE_COMMANDE = 0,
-  DEMANDE_BIERE_ROUGE = 1,
-  DEMANDE_BIERE_BLEUE = 2,
-  DEMANDE_BIERE_JAUNE = 3,
+  DEMANDE_COCA_COLA = 1,
+  DEMANDE_MINUTE_MAID = 2,
+  DEMANDE_PEACE_TEA = 3,
   DEMANDE_OUVRIR = 4,
-  DEMANDE_BIERE_ROUGE_OUVERTURE = 5,
-  DEMANDE_BIERE_BLEUE_OUVERTURE = 6,
-  DEMANDE_BIERE_JAUNE_OUVERTURE = 7,
+  DEMANDE_COCA_COLA_OUVERTURE = 5,
+  DEMANDE_MINUTE_MAID_OUVERTURE = 6,
+  DEMANDE_PEACE_TEA_OUVERTURE = 7,
 };
 
-// Déclaration de la fonction pour main.cpp 
-class WirelessCommand {
- public:
-  void update();
-};
+// Retourne la prochaine commande reçue, ou AUCUNE_COMMANDE si aucune commande valide n'est disponible.
+cmdEsp lireCommandeSansFil();
 
 #endif

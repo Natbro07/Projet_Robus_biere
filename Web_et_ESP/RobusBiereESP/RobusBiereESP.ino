@@ -29,13 +29,13 @@ void envoyerCommande(byte commande) {
 
   const char* nom;
   switch (commande) {
-    case 1: nom = "BIERE ROUGE"; break;
-    case 2: nom = "BIERE BLEUE"; break;
-    case 3: nom = "BIERE JAUNE"; break;
+    case 1: nom = "COCA-COLA"; break;
+    case 2: nom = "MINUTE MAID"; break;
+    case 3: nom = "PEACE TEA"; break;
     case 4: nom = "OUVRIR CANETTE"; break;
-    case 5: nom = "BIERE ROUGE + OUVERTURE"; break;
-    case 6: nom = "BIERE BLEUE + OUVERTURE"; break;
-    case 7: nom = "BIERE JAUNE + OUVERTURE"; break;
+    case 5: nom = "COCA-COLA + OUVERTURE"; break;
+    case 6: nom = "MINUTE MAID + OUVERTURE"; break;
+    case 7: nom = "PEACE TEA + OUVERTURE"; break;
     default: nom = "COMMANDE INCONNUE"; break;
   }
 
