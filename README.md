@@ -12,7 +12,8 @@ Projet Robot serveur de bière Robus
 
 ### Où ajouter les actions selon les commandes
 (Ajouter les direction a prendre pour rejoindre la ligne et ensuite suivre la ligne. Lorsque le code du suiveur de ligne sera complet) 
-- Dossier :  lib -> sous-dossier : WirelessCommand -> fichier : WirelessCommand.cpp -> gererCommande() et ajouter les actions selon la librairie du suiveur de ligne.
+- La fonction `lireCommandeSansFil()` dans `lib/WirelessCommand` retourne l'enum de la commande reçue.
+- Plus tard, le `switch` dans `src/main.cpp` pourra utiliser cette valeur pour choisir les actions à exécuter.
 
 
 
