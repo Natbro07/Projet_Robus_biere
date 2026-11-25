@@ -3,3 +3,10 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/ipch
+src/main.cpp
+src/uno_test.cpp
+platformio.ini
+src/main.cpp
+src/main.cpp
+/src
+/Web_et_ESP/node_modules

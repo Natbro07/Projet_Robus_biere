@@ -1,18 +1,15 @@
 #include "SuiveurLigne.h"
+#include "Mouvement.h"
+#include "LibRobus.h"
 
 float virage_past = 0;
 float virage = 0;
-int LAST_SIDE; // 0 = gauche, 1 = centre, 2 = droite
+int LAST_SIDE = 1; // 0 = gauche, 1 = centre, 2 = droite
 
 bool voitLigne(uint8_t pin)
 {
   return (analogRead(pin) > SEUIL_LIGNE) == LIGNE_VALEUR_HAUTE;
 }
-
-void avance(float left, float right){
-  MOTOR_SetSpeed(RIGHT, right);
-  MOTOR_SetSpeed(LEFT,  left);
-};
 
 bool suiveurLigne(float vitesse)
 {
@@ -86,11 +83,7 @@ bool suiveurLigne(float vitesse)
         sync = (0.995 * ENCODER_Read(RIGHT) - ENCODER_Read(LEFT)) * k_sync2;
         sync = constrain(sync, -0.1, 0.1);
     }
-    else {
-        ENCODER_Reset(LEFT);
-        ENCODER_Reset(RIGHT);
-        sync = 0;
-    }
+    else sync = 0;
  
     // 3. Application aux moteurs
     // La vitesse minimale est abaissée à -0.2 (marche arrière) pour permettre un pivot rapide
@@ -99,6 +92,24 @@ bool suiveurLigne(float vitesse)
     constrain(vitesse * (1.0 - virage), -0.2, 0.35) - sync);
     
     return true;
+}
+
+void suivreLigneDistance(float distance_m, float vitesse)
+{
+    const float cible = distance_m * 39.37;
+    ENCODER_Reset(LEFT);
+    ENCODER_Reset(RIGHT);
+
+    while (true) {
+        const float dG = ENCODER_Read(LEFT) * circonference_roue / 3200.0;
+        const float dD = ENCODER_Read(RIGHT) * circonference_roue / 3200.0;
+        if ((dG + dD) / 2.0 >= cible) break;
+
+        suiveurLigne(vitesse);
+        delay(10);
+    }
+
+    arret();
 }
 
 void suiveurAfficherCapteurs()

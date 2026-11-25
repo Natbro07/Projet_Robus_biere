@@ -14,5 +14,7 @@ void setup()
 }
 void loop() 
 {
-  // Boucle principale du projet
+  arret();
+  wirelessCommand.update();
+  
 }

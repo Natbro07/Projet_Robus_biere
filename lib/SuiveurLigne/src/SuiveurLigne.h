@@ -25,6 +25,7 @@ bool voitLigne(uint8_t pin); // RETOURNE SI IL Y A UNE LIGNE SOUS LA PIN
 void avance(float left, float right); // FAIS AVANCER LE ROBOT SANS CORRECTION, LES INPUTS SONT LES VITESSES DES ROUES
 
 bool suiveurLigne(float vitesse); // RETURN TRUE QUAND LA FONCTION EST APPELÉ
+void suivreLigneDistance(float distance_m, float vitesse);
 
 void suiveurAfficherCapteurs(); // AFFICHE LES VALEURS DES PINS ANALOGUE DES CAPTEURS
 
