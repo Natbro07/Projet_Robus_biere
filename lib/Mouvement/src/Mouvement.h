@@ -23,10 +23,10 @@ void avance(float left, float right); // FAIS AVANCER LE ROBOT SANS CORRECTION, 
 
 void tourne(float left, float right); // FAIS TOURNER LE ROBOT SANS CORRECTION, LES INPUTS SONT LES VITESSES DES ROUES
 
-void tourner_deg(float angle, float vitesse); // TOURNE DE x DEGRÉS AVEC PID POUR NOMBRE DE DEGRÉS
+void tourner_deg(float angle, float vitesse); // TOURNE DE x DEGRÉS AVEC PID POUR ANGLE
 
 void avance_m(float distance, float vitesse); // AVANCE DE x MÈTRES AVEC PID POUR DISTANCE
 
-void avance_droit(float vitesse); // AVANCE AVEC CORRECTION SIMPLE SANS PID
+void avance_droit(float vitesse); // AVANCE AVEC CORRECTION PROPORTIONNEL SEULEMENT
 
 #endif
