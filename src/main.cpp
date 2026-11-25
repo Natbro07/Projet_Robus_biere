@@ -6,11 +6,7 @@ Date: 17 novembre 2026
 */
 
 #include <LibRobus.h>
-<<<<<<< Updated upstream
-#include "capteurIR.h"
-=======
 #include "WirelessCommand.h"
->>>>>>> Stashed changes
 
 void setup() 
 {
