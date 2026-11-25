@@ -5,6 +5,7 @@
 */
 
 #include "WirelessCommand.h"
+#include <LibRobus.h>
 // Exemmple d'utilisation 
 // cmdEsp commande = lireCommandeSansFil();
 
@@ -45,4 +46,10 @@ cmdEsp lireCommandeSansFil() {
   }
 
   return AUCUNE_COMMANDE;
+}
+
+void initWirelessCommand() 
+{
+  BluetoothInit();
+  
 }
