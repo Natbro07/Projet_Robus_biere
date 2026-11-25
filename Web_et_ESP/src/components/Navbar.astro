@@ -1,0 +1,237 @@
+---
+import { Bluetooth, House } from 'lucide-astro';
+---
+
+<nav class="navbar" aria-label="Navigation principale">
+	<a class="brand" href="/" aria-label="Robot serveur de breuvages">
+		<span>Robot serveur de breuvages</span>
+	</a>
+
+	<div class="nav-actions">
+		
+		<button class="bluetooth-button" type="button" data-connect>
+			<Bluetooth size={18} strokeWidth={2.2} aria-hidden="true" />
+			<span data-connect-label>Connecter</span>
+		</button>
+	</div>
+</nav>
+
+<p class="connection-status" data-connection-status role="status" aria-live="polite"></p>
+
+<script>
+	type BluetoothCharacteristicLike = {
+		writeValue(value: Uint8Array): Promise<void>;
+		startNotifications(): Promise<BluetoothCharacteristicLike>;
+		addEventListener(type: string, listener: (event: Event) => void): void;
+		value: DataView | null;
+	};
+	type BluetoothDeviceLike = {
+		name: string | null;
+		gatt?: {
+			connected: boolean;
+			connect(): Promise<{
+				getPrimaryService(uuid: string): Promise<{
+					getCharacteristic(uuid: string): Promise<BluetoothCharacteristicLike>;
+				}>;
+			}>;
+			disconnect(): void;
+		};
+		addEventListener(type: string, listener: () => void): void;
+	};
+	type BluetoothNavigator = Navigator & {
+		bluetooth: {
+			requestDevice(options: {
+				filters: Array<{ services: string[] }>;
+				optionalServices: string[];
+			}): Promise<BluetoothDeviceLike>;
+		};
+	};
+
+	const connectButton = document.querySelector('[data-connect]');
+	const connectLabel = document.querySelector('[data-connect-label]');
+	const connectionStatus = document.querySelector('[data-connection-status]');
+	const SERVICE_UUID = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
+	const RX_UUID = '6e400002-b5a3-f393-e0a9-e50e24dcca9e';
+	const TX_UUID = '6e400003-b5a3-f393-e0a9-e50e24dcca9e';
+	let connectedDevice: BluetoothDeviceLike | null = null;
+
+	function resetConnection(message = 'Robot déconnecté.') {
+		connectedDevice = null;
+		document.body.dataset.robotConnected = 'false';
+		if (connectLabel) connectLabel.textContent = 'Connecter';
+		if (connectionStatus) connectionStatus.textContent = message;
+		document.dispatchEvent(new CustomEvent('bluetooth-disconnected'));
+	}
+
+	connectButton?.addEventListener('click', async () => {
+		if (connectedDevice?.gatt?.connected) {
+			connectedDevice.gatt.disconnect();
+			resetConnection();
+			return;
+		}
+
+		if (!window.isSecureContext) {
+			if (connectionStatus) connectionStatus.textContent = 'La connexion Bluetooth nécessite une adresse HTTPS.';
+			return;
+		}
+
+		if (!('bluetooth' in navigator)) {
+			if (connectionStatus) connectionStatus.textContent = 'Web Bluetooth n\'est pas disponible ici. Utilisez Chrome sur Android ou un ordinateur compatible.';
+			return;
+		}
+
+		if (connectLabel) connectLabel.textContent = 'Recherche...';
+		if (connectButton) connectButton.setAttribute('aria-busy', 'true');
+
+		try {
+			const device = await (navigator as BluetoothNavigator).bluetooth.requestDevice({
+				filters: [{ services: [SERVICE_UUID] }],
+				optionalServices: [SERVICE_UUID],
+			});
+			const server = await device.gatt?.connect();
+			if (!server) throw new Error('Serveur Bluetooth indisponible.');
+			const service = await server.getPrimaryService(SERVICE_UUID);
+			const characteristic = await service.getCharacteristic(RX_UUID);
+			const notifyCharacteristic = await service.getCharacteristic(TX_UUID);
+			await notifyCharacteristic.startNotifications();
+			notifyCharacteristic.addEventListener('characteristicvaluechanged', (event: Event) => {
+				const target = event.target as unknown as BluetoothCharacteristicLike;
+				if (target.value && target.value.byteLength > 0) {
+					document.dispatchEvent(new CustomEvent('bluetooth-message', {
+						detail: { code: target.value.getUint8(0) },
+					}));
+				}
+			});
+			connectedDevice = device;
+			device.addEventListener('gattserverdisconnected', () => resetConnection('Connexion Bluetooth perdue.'));
+			document.body.dataset.robotConnected = 'true';
+			if (connectLabel) connectLabel.textContent = 'Déconnecter';
+			if (connectionStatus) connectionStatus.textContent = `${device.name || 'Appareil'} est connecté.`;
+			document.dispatchEvent(new CustomEvent('bluetooth-connected', {
+				detail: { characteristic },
+			}));
+		} catch (error) {
+			console.error('Connexion Bluetooth impossible:', error);
+			document.body.dataset.robotConnected = 'false';
+			if (error instanceof DOMException && error.name === 'NotFoundError') {
+				if (connectionStatus) connectionStatus.textContent = 'Aucun appareil sélectionné.';
+			} else if (connectionStatus) {
+				const message = error instanceof Error ? error.message : 'Erreur inconnue';
+				connectionStatus.textContent = `Connexion impossible : ${message}`;
+			}
+			if (connectLabel) connectLabel.textContent = 'Connecter';
+		} finally {
+			connectButton?.removeAttribute('aria-busy');
+		}
+	});
+
+    
+</script>
+
+<style>
+	.navbar {
+		align-items: center;
+		background: #0d0d16;
+		display: flex;
+		justify-content: space-between;
+		padding: 16px clamp(20px, 5vw, 72px);
+		position: relative;
+		z-index: 2;
+	}
+
+	.brand,
+	.home-tab,
+	.bluetooth-button {
+		align-items: center;
+		display: inline-flex;
+		font-family: 'Trebuchet MS', sans-serif;
+		gap: 9px;
+	}
+
+	.brand {
+		color: #ffca3a;
+		font-size: 1.08rem;
+		font-weight: 700;
+		text-decoration: none;
+	}
+
+	.brand-mark {
+		align-items: center;
+		background: #ffca3a;
+		border-radius: 50%;
+		color: #2e2e3a;
+		display: inline-flex;
+		font-size: 1rem;
+		font-weight: 700;
+		height: 31px;
+		justify-content: center;
+		width: 31px;
+	}
+
+	.nav-actions {
+		align-items: center;
+		display: flex;
+		gap: 8px;
+	}
+
+	.home-tab,
+	.bluetooth-button {
+		border: 0;
+		border-radius: 7px;
+		cursor: pointer;
+		padding: 9px 12px;
+		text-decoration: none;
+		transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+	}
+
+	.home-tab {
+		color: #ffca3a;
+	}
+
+	.home-tab:hover,
+	.home-tab[aria-current='page'] {
+		background: rgba(255, 202, 58, 0.12);
+		color: #ffca3a;
+	}
+
+	.bluetooth-button {
+		background: #9c6615;
+		color: #fff;
+	}
+
+	.bluetooth-button:hover {
+		background: #ffca3a;
+		color: #2e2e3a;
+		transform: translateY(-1px);
+	}
+
+	.bluetooth-button[aria-busy='true'] {
+		cursor: wait;
+		opacity: 0.7;
+	}
+
+	.connection-status {
+		color: #ffca3a;
+		font-family: 'Trebuchet MS', sans-serif;
+		font-size: 0.78rem;
+		margin: 8px clamp(20px, 5vw, 72px) 0;
+		min-height: 1.2em;
+		text-align: right;
+	}
+
+	@media (max-width: 560px) {
+		.navbar {
+			align-items: flex-start;
+			gap: 14px;
+			padding: 14px 18px;
+		}
+
+		.brand span:last-child {
+			max-width: 120px;
+		}
+
+		.home-tab span {
+			display: none;
+		}
+	}
+</style>

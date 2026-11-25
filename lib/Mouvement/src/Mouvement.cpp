@@ -1,5 +1,6 @@
 
 #include "Mouvement.h"
+#include "LibRobus.h"
 
 float encodeur_droit = 0;
 float encodeur_gauche = 0;
