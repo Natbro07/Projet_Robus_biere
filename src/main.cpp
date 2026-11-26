@@ -5,7 +5,6 @@ Auteurs: Charles-Antoine Gagnon, Olivier Grant, Kilian Renard-Angebault, Mathys 
 Date: 17 novembre 2026
 */
 
-#include <LibRobus.h>
 #include "WirelessCommand.h"
 
 
