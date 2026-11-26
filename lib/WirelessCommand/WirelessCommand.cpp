@@ -5,6 +5,7 @@
 */
 
 #include "WirelessCommand.h"
+#include <LibRobus.h>
 // Exemmple d'utilisation 
 // cmdEsp commande = lireCommandeSansFil();
 
@@ -45,8 +46,8 @@ cmdEsp lireCommandeSansFil() {
   return AUCUNE_COMMANDE;
 }
 
-void initWirelessCommand()
+void initWirelessCommand() 
 {
-  // UART2 du Mega (broches 16 TX, 17 RX), même débit que l'ESP32.
-  Serial2.begin(115200);
+  BluetoothInit();
+  
 }

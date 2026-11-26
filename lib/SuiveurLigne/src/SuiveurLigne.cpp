@@ -6,10 +6,21 @@ float virage_past = 0;
 float virage = 0;
 int LAST_SIDE = 1; // 0 = gauche, 1 = centre, 2 = droite
 
+void init_suiveurLigne(){
+    pinMode(PIN_GAUCHE, INPUT);
+    pinMode(PIN_CENTRE, INPUT);
+    pinMode(PIN_DROITE, INPUT);
+}
+
 bool voitLigne(uint8_t pin)
 {
   return (analogRead(pin) > SEUIL_LIGNE) == LIGNE_VALEUR_HAUTE;
 }
+
+void avance_ligne(float v_left, float v_right){
+  MOTOR_SetSpeed(RIGHT, v_right);
+  MOTOR_SetSpeed(LEFT,  v_left);
+};
 
 bool suiveurLigne(float vitesse)
 {
@@ -23,59 +34,55 @@ bool suiveurLigne(float vitesse)
         int count_g = 0;
         float total = 0;
         unsigned long detection_time = millis();
-        while (millis() - detection_time < 10){
+        while (millis() - detection_time < 3){
             g_check = voitLigne(PIN_GAUCHE);
             c_check = voitLigne(PIN_CENTRE);
             d_check = voitLigne(PIN_DROITE);
             if (g_check){
                 count_g++;
             }
-            else if (d_check){
+            if (d_check){
                 count_d++;
             }
             total++;
         }
-        if (count_d >= total / 1.5 || count_g >= total / 1.5){
-
-            // 2. Décision du virage
-            if (g_check) {
-                // Ligne à gauche : virage sec à gauche
-                virage = -VIRAGE_BASE;
-                virage_past = 0;
-                LAST_SIDE = 0;
-            }
-            else if (d_check) {
-                // Ligne à droite : virage sec à droite
-                virage = VIRAGE_BASE;
-                virage_past = 0;
-                LAST_SIDE = 2;
-            }
-
+        if (count_d > total / 1.25){
+            // Ligne à droite : virage sec à droite
+            virage = VIRAGE_BASE;
+            virage_past = 0;
+            LAST_SIDE = 2;
+        }
+        else if (count_g > total / 1.25){
+            // Ligne à gauche : virage sec à gauche
+            virage = -VIRAGE_BASE;
+            virage_past = 0;
+            LAST_SIDE = 0;
         }
     }
-        else if (c_check){
-            // Ligne au centre : réaligner tout droit
+    else if (c_check){
+        // Ligne au centre : réaligner tout droit
+        virage = 0;
+        virage_past = 0;
+        LAST_SIDE = 1;
+    }
+    else {
+        // Ligne perdue : accélération de la recherche
+        if (LAST_SIDE == 0) {
+            virage = -VIRAGE_BASE - virage_past;
+            virage_past += SCALE;
+        } 
+        else if (LAST_SIDE == 2) {
+            virage = VIRAGE_BASE + virage_past;
+            virage_past += SCALE;
+        } 
+        else {
             virage = 0;
             virage_past = 0;
-            LAST_SIDE = 1;
         }
-        else {
-            // Ligne perdue : accélération de la recherche
-            if (LAST_SIDE == 0) {
-                virage = -VIRAGE_BASE - virage_past;
-                virage_past += SCALE;
-            } 
-            else if (LAST_SIDE == 2) {
-                virage = VIRAGE_BASE + virage_past;
-                virage_past += SCALE;
-            } 
-            else {
-                virage = 0;
-                virage_past = 0;
-            }
-        }
+    }
 
-    // Autorise une plus grande amplitude de braquage
+    // Autorise une plus grande amplitude de braquage et proportionnel de
+    // l'erreur entre les 2 encodeurs.
     virage = constrain(virage, -VIRAGE_MAX, VIRAGE_MAX);
     vitesse = min(vitesse, VITESSE_MAX);
     float sync = 0;
@@ -83,12 +90,14 @@ bool suiveurLigne(float vitesse)
         sync = (0.995 * ENCODER_Read(RIGHT) - ENCODER_Read(LEFT)) * k_sync2;
         sync = constrain(sync, -0.1, 0.1);
     }
-    else sync = 0;
- 
-    // 3. Application aux moteurs
-    // La vitesse minimale est abaissée à -0.2 (marche arrière) pour permettre un pivot rapide
+    else {
+        ENCODER_Reset(LEFT);
+        ENCODER_Reset(RIGHT);
+        sync = 0;
+    }
+     // La vitesse minimale est abaissée à -0.2 (marche arrière) pour permettre un pivot rapide
 
-    avance(constrain(vitesse * (1.0 + virage), -0.2, 0.35) + sync, 
+    avance_ligne(constrain(vitesse * (1.0 + virage), -0.2, 0.35) + sync, 
     constrain(vitesse * (1.0 - virage), -0.2, 0.35) - sync);
     
     return true;
@@ -99,17 +108,15 @@ void suivreLigneDistance(float distance_m, float vitesse)
     const float cible = distance_m * 39.37;
     ENCODER_Reset(LEFT);
     ENCODER_Reset(RIGHT);
-
+    suiveurLigne(vitesse);
     while (true) {
         const float dG = ENCODER_Read(LEFT) * circonference_roue / 3200.0;
         const float dD = ENCODER_Read(RIGHT) * circonference_roue / 3200.0;
-        if ((dG + dD) / 2.0 >= cible) break;
-
-        suiveurLigne(vitesse);
-        delay(10);
+        if ((dG + dD) / 2.0 >= cible){
+            arret();
+            break;
+        }
     }
-
-    arret();
 }
 
 void suiveurAfficherCapteurs()
