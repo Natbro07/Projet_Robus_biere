@@ -9,17 +9,10 @@ Date: 17 novembre 2026
 
 void setup() 
 {
-<<<<<<< Updated upstream
-  // Initialisation du projet 
-  BoardInit();
-  BluetoothInit();
-  Serial.begin(9600);
-=======
   Serial.begin(9600);
   initWirelessCommand();
   Serial.println("Initialisation du robot bière");
  
->>>>>>> Stashed changes
 }
 void loop() 
 {
@@ -48,13 +41,9 @@ switch (commande) {
   case DEMANDE_PEACE_TEA_OUVERTURE:
     Serial.println("Demande d'ouverture de Peace Tea reçue");
     break;
-<<<<<<< Updated upstream
 
   case AUCUNE_COMMANDE:
   default:
     break;
 }
-=======
- }
->>>>>>> Stashed changes
 }
