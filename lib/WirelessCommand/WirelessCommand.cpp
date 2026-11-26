@@ -27,7 +27,6 @@
 //     // arret();
 //     break;
 // }
-
 cmdEsp lireCommandeSansFil() {
   while (Serial2.available()) {
     const int received = Serial2.read();
@@ -36,13 +35,18 @@ cmdEsp lireCommandeSansFil() {
     }
 
     if (received >= DEMANDE_COCA_COLA &&
-        received <= DEMANDE_PEACE_TEA_OUVERTURE) { 
-          // on regarde si la commande reçue est valide 
-          //et si elle est dans l'intervalle des commandes définies dans l'énumération cmdEsp.
-          // Si la commande est valide, on la convertit en type cmdEsp et on la retourne.
+        received <= DEMANDE_PEACE_TEA_OUVERTURE) {
       return static_cast<cmdEsp>(received);
     }
+
+   
   }
 
   return AUCUNE_COMMANDE;
+}
+
+void initWirelessCommand()
+{
+  // UART2 du Mega (broches 16 TX, 17 RX), même débit que l'ESP32.
+  Serial2.begin(115200);
 }

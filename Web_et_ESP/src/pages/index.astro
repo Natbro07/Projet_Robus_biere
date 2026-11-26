@@ -298,6 +298,9 @@ const cardList = [
 </style>
 <script>
     const actionButtons = document.querySelectorAll<HTMLButtonElement>('.button[data-action]');
+	const pendingButtons = new WeakSet<HTMLButtonElement>();
+	const lastClickByButton = new WeakMap<HTMLButtonElement, number>();
+	const DOUBLE_CLICK_GUARD_MS = 300;
 
 	const openCanButton = document.getElementById('open-can');
     const toast = document.querySelector('[data-toast]');
@@ -379,8 +382,17 @@ const cardList = [
                 return;
             }
 
+			if (pendingButtons.has(button) ||
+				Date.now() - (lastClickByButton.get(button) ?? 0) < DOUBLE_CLICK_GUARD_MS) {
+				return;
+			}
+
+			if (cardIndex < 0) return;
+
+			pendingButtons.add(button);
+			lastClickByButton.set(button, Date.now());
+
             try {
-				if (cardIndex < 0) return;
 				// 1-3 : commander uniquement
 				// 5-7 : commander puis ouvrir
 				const commande = action === 'order-open' ? cardIndex + 5 : cardIndex + 1;
@@ -391,10 +403,13 @@ const cardList = [
                 console.log(`Commande ${commande} envoyée !`);
 
             } catch (error) {
+				lastClickByButton.delete(button);
                 console.error("Erreur d'envoi:", error);
                 alert("Erreur lors de l'envoi de la commande. La connexion est-elle perdue ?");
 				document.body.dataset.robotConnected = 'false';
 				rxCharacteristic = null;
+			} finally {
+				pendingButtons.delete(button);
             }
         });
     });
